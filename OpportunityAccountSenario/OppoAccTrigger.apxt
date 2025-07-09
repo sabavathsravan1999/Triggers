@@ -1,0 +1,5 @@
+trigger oppOperations on Opportunity (after insert, after update, after delete, after undelete) {
+    if(Trigger.isAfter && (Trigger.isInsert || Trigger.isUpdate || Trigger.isDelete || Trigger.isUndelete)){
+        oppOperationHandler.oppActiviHandler(Trigger.new, Trigger.oldMap);
+    }
+}
