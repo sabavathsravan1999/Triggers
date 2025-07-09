@@ -1,0 +1,50 @@
+public class oppOperationHandler {
+    public static void oppActiviHandler(List<Opportunity> newRecords, Map<Id, Opportunity> oldRecords){
+       Set<Id> accIds=new Set<Id>();
+        if(newRecords!=null){
+            for(Opportunity eo : newRecords){
+                if(eo.AccountId!=null){
+                //if oppo Inserted & Undelete
+                    if(Trigger.isInsert || Trigger.isUndelete){
+                        accIds.add(eo.AccountId);
+                    }
+                //If oppo updated
+                if(Trigger.isUpdate){
+                     if(eo.AccountId!=null && eo.StageName != oldRecords.get(eo.Id).StageName){
+                        accIds.add(eo.AccountId);
+                    }
+                }
+            }
+        }
+    }
+        //if oppo is Deleted from related account
+        if(Trigger.isDelete){
+            for(Opportunity eo : oldRecords.values()){
+                if(eo.AccountId!=null){
+                accIds.add(eo.AccountId);
+                }
+            }
+        }
+        operation(accIds); 
+}
+// The operation on Account
+    public static void operation(Set<Id> accIds){
+         Map<Id, Account> accs=new Map<Id, Account>([Select Id, totalOpenOpps__c, totalClosedOpps__c, (Select Id, StageName from Opportunities) from Account where Id IN : accIds]);
+        List<Account> accUpdate=new List<Account>();
+        for(Account ea : accs.Values()){
+            Integer ClosedOpp=0;
+            List<Opportunity> allopp=ea.Opportunities;
+            for(Opportunity eo : allopp){
+                if(eo.StageName == 'Closed Won'){
+                    ClosedOpp++;
+                }
+            }
+            ea.totalClosedOpps__c=ClosedOpp;
+            ea.totalOpenOpps__c=allopp.size()-ClosedOpp;
+            accUpdate.add(ea);
+        }
+        if(!accUpdate.isEmpty()){
+            update accUpdate;
+        }
+    }
+}
