@@ -4,7 +4,7 @@ Ensure that only the newest Contact on each Account has your custom field Is_R
 
 trigger contactFiledRecent on Contact (after insert, after delete) {
     if(Trigger.isAfter){
-        if(Trigger.isInsert){
+        if(Trigger.isInsert || Trigger.isUndelete){
             contactFieldRecentflagHandler.contactFieldRecentflagActivity(Trigger.new);
         }
         if(Trigger.isDelete){
