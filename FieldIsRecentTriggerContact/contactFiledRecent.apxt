@@ -2,7 +2,7 @@
 /*💡 Problem Statement: 
 Ensure that only the newest Contact on each Account has your custom field Is_Recent__c(on Contact object) checkbox set to true, every time someone inserts or deletes a Contact.*/
 
-trigger contactFiledRecent on Contact (after insert, after delete) {
+trigger contactFiledRecent on Contact (after insert, after delete, after undelete) {
     if(Trigger.isAfter){
         if(Trigger.isInsert || Trigger.isUndelete){
             contactFieldRecentflagHandler.contactFieldRecentflagActivity(Trigger.new);
