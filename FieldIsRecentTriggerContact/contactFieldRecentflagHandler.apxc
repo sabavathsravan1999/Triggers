@@ -1,0 +1,19 @@
+public class contactFieldRecentflagHandler {
+    public static void contactFieldRecentflagActivity(List<Contact> records){
+        Set<Id> accids=new Set<Id>();
+        for(Contact ec : records){
+            if(ec.AccountId!=null) accids.add(ec.AccountId);
+        }
+        List<Contact> cons=[SELECT Id, Name, field_Is_Recent__c, CreatedDate from Contact WHERE AccountId IN : accids ORDER BY CreatedDate DESC];
+        cons[0].field_Is_Recent__c=true;
+        Id id=cons[0].Id;
+        for(Contact ec : cons){
+            if(ec.Id!=id){
+                ec.field_Is_Recent__c=false;
+            }
+        }
+        if(!cons.isEmpty()){
+            update cons;
+        }  
+    }
+}
