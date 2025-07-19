@@ -1,0 +1,49 @@
+public class contactFieldRecentflagHandlerBulkify {
+    public static void contactFieldRecentflagActivity(List<Contact> records){
+        Set<Id> accids=new Set<Id>();
+        for(Contact ec : records){
+            if(ec.AccountId!=null) accids.add(ec.AccountId);
+        }
+        List<Contact> cons=[SELECT Id, Name, field_Is_Recent__c, AccountId, CreatedDate from Contact 
+                            WHERE AccountId IN : accids ORDER BY CreatedDate DESC];
+       //for bulkify i will make map of Accound=tid --> list of allContacts of each Account
+       Map<Id, List<Contact>> myAccOFallCon= new Map<Id, List<Contact>>();
+        for(Contact ec : cons){
+            //if the account is already there
+            if(myAccOFallCon.ContainsKey(ec.AccountId)){
+                myAccOFallCon.get(ec.AccountId).add(ec); //fetch the existing list of contacts and add the new contact to it
+            }else{ //if account is not there
+                List<Contact> c=new List<Contact>();
+                c.add(ec);
+                myAccOFallCon.put(ec.AccountId, c); //here c is the list of contacts
+            }
+        }
+       /* now my map is like this 
+            A1--> {c1, c2,c3} after sort A1--> {c3, c2,c1}
+      	  	A2--> {C1, C2}    after sort A2--> {C2, C1}
+        	A3--> {C1}        after sort A3--> {C1} 
+*/ 
+        //contacts already sorted based on created date now just fetch them 
+     List<Contact> contstoUpdate=new List<Contact>();
+        for(Id accid : myAccOFallCon.keySet()){
+            Boolean first=true;
+            
+            for(Contact con : myAccOFallCon.get(accid)){
+                Boolean VeryRecent=first;
+                first =false;
+                if(con.field_Is_Recent__c != VeryRecent){
+                    con.field_Is_Recent__c=VeryRecent;
+                    contstoUpdate.add(con);
+                }
+                
+            }
+            
+        }
+          
+        
+        if(!cons.isEmpty()){
+            update contstoUpdate;
+        } 
+    }
+
+}
