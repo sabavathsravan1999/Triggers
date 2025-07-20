@@ -8,3 +8,7 @@ A user can not create more then one opportunity per account in 24 hours if this 
 
 ---> Trigger       : oppo24hrsblocknew.appxt
 ---> Handler Class : oppo24hrsblockHandler.apxc
+
+imp SOQL :
+ List<Opportunity> oopsofAcc= [SELECT Id, AccountId, OwnerId, CreatedDate from Opportunity where CreatedDate=today AND AccountId IN :accid AND OwnerId IN : owerid];
+
