@@ -1,0 +1,6 @@
+trigger scenario:
+reference video by Mohit Tripathi : https://youtube.com/shorts/Kb3w07dq0ks?si=oz7hLMiKwuzmx-s0
+A user can not create more then one opportunity per account in 24 hours if this user trys for the creating more than oneopportunity per account in 24 hours then throw an error
+    *Each user should only be able to create one Opportunity per Account within a 24-hour period.
+    *If a user attempts to create a second opportunity for the same Account within 24 hours of the first opportunity, an error message should be triggered.
+    *The error message should prevent the creation of the second Opportunity, and the user should be notified that they are not allowed to create multiple opportunities for the same account within a 24-hour window.
