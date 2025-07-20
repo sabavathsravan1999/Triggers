@@ -1,0 +1,34 @@
+public class oppo24hrsblockHandler {
+    public static void oppo24hrsblockActivity(List<Opportunity> records){
+        Set<Id> accid=new Set<Id>();
+        Set<Id> owerid=new Set<Id>();
+        for(Opportunity eop : records){
+            if(eop.AccountId!=null && eop.OwnerId!=null){
+                accid.add(eop.AccountId);
+                owerid.add(eop.OwnerId);
+            }
+        }
+        List<Opportunity> oopsofAcc=[SELECT Id, AccountId, OwnerId, CreatedDate from Opportunity 
+                                                                          where CreatedDate=today AND AccountId IN :accid AND OwnerId IN : owerid];
+        Map<Id, List<Opportunity>> accidAllOppos=new Map<Id,List<Opportunity>>();
+        //i will create a like this 
+        //A1 -> {op1, op2, op3}
+        
+        for(Opportunity op : oopsofAcc){
+            //if account id already there
+            if(accidAllOppos.containsKey(op.AccountId)){
+                accidAllOppos.get(op.AccountId).add(op);
+            }else{
+                List<Opportunity> oppo=new List<Opportunity>();
+                    oppo.add(op);
+                accidAllOppos.put(op.AccountId, oppo);
+            }
+        }
+        for(Opportunity oppo : records){
+            if(accidAllOppos.containsKey(oppo.AccountId)){
+                oppo.addError('Please create opportunity after 24 hrs, condition created by SRAVAN');
+            }
+        }
+        
+    }
+}
