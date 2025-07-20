@@ -1,0 +1,5 @@
+trigger oppo24hrsblocknew on Opportunity (before insert) {
+    if(Trigger.isBefore && Trigger.isInsert){
+        oppo24hrsblockHandler.oppo24hrsblockActivity(Trigger.new);
+    }
+}
