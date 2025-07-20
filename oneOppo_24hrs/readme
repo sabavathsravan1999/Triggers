@@ -1,5 +1,6 @@
 trigger scenario:
 reference video by Mohit Tripathi : https://youtube.com/shorts/Kb3w07dq0ks?si=oz7hLMiKwuzmx-s0
+result video in my linekdin post: https://www.linkedin.com/posts/sabavath-sravan-87834a19b_salesforce-salesforcedev-apextriggers-activity-7352790855214120960-EpYe?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAC7b4FwBgvP9Je3kJ7FWP7Hnh3vOafKkID0
 A user can not create more then one opportunity per account in 24 hours if this user trys for the creating more than oneopportunity per account in 24 hours then throw an error
     *Each user should only be able to create one Opportunity per Account within a 24-hour period.
     *If a user attempts to create a second opportunity for the same Account within 24 hours of the first opportunity, an error message should be triggered.
