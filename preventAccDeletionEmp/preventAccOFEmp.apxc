@@ -1,0 +1,12 @@
+public class preventAccOFEmp {
+    public static void handleDeleteActivity(Map<Id,Account> oldRecords){
+        Map<Id,Account> accofEmp=new Map<Id,Account>([Select Id, Name, (Select Id,Name, AccountId__c from EmployeeOFAccs__r) from Account where Id IN : oldRecords.keySet()]);
+        
+        for(Account ea : oldRecords.values()){
+            if(accofEmp.containsKey(ea.Id) && accofEmp.get(ea.Id).EmployeeOFAccs__r.size()>=1 ){
+                //System.debug(accofEmp.get(ea.Id).EmployeeOFAccs__r.size());
+                ea.addError('Reach out to Admin, this Account has the Employees so can\'t not delete');
+            }
+        }
+    }
+}
