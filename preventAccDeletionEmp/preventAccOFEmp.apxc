@@ -5,7 +5,8 @@ public class preventAccOFEmp {
         for(Account ea : oldRecords.values()){
             if(accofEmp.containsKey(ea.Id) && accofEmp.get(ea.Id).EmployeeOFAccs__r.size()>=1 ){
                 //System.debug(accofEmp.get(ea.Id).EmployeeOFAccs__r.size());
-                ea.addError('Reach out to Admin, this Account has the Employees so can\'t not delete');
+                //ea.addError('Reach out to Admin, this Account has the Employees so can\'t not delete');
+                ea.addError(Label.Prevent_Deletion_Account);
             }
         }
     }
