@@ -6,4 +6,5 @@ Problem Statement:
 In Salesforce, there is a custom object Employee__c that has a lookup relationship to the standard Account object(parent). 
 Implement a trigger that prevents the deletion of an Account record if there is at least one related Employee__c record associated with it.
 Problem Statement youtube URL: https://youtube.com/shorts/-BSM0EjinXY?si=jG2ZfpKuX2YEpSNU
-solution result in my Linkedin: 
+solution result in my Linkedin: https://www.linkedin.com/posts/sabavath-sravan-87834a19b_salesforce-salesforcedev-apextriggers-activity-7354448706022133762-eF6J?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAC7b4FwBgvP9Je3kJ7FWP7Hnh3vOafKkID0
+
