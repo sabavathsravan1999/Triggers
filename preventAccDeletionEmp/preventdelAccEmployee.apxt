@@ -1,0 +1,6 @@
+trigger preventdelAccEmployee on Account (before delete) {
+    if(Trigger.isBefore && Trigger.isDelete){
+        preventAccOFEmp.handleDeleteActivity(Trigger.oldMap);
+    }
+
+}
