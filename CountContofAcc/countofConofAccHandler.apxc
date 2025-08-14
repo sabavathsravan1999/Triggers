@@ -1,0 +1,20 @@
+public class countofConofAccHandler {
+    public static void countActivities(List<Contact> records){
+       Set<Id> accIds=new Set<Id>();
+        for(Contact ec : records){
+            if(ec.AccountId!=null){
+                accIds.add(ec.AccountId);
+            }
+        }
+        
+        Map<Id, Account> fetcAccvsCon=new Map<Id, Account>([SELECT Id, NumberOfContacts__c, (SELECT Id from Contacts) from Account WHERE Id IN : accIds ]);
+        List<Account> updateAcc=new List<Account>();
+        for(Account ea : fetcAccvsCon.Values()){
+            ea.NumberOfContacts__c=fetcAccvsCon.get(ea.Id).Contacts.size();
+            updateAcc.add(ea);
+        }
+        if(!updateAcc.isEmpty()){
+            update updateAcc;
+        }
+    }
+}
