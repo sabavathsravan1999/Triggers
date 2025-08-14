@@ -1,0 +1,10 @@
+//Write a trigger to show no. of contacts associated with the Account as a field on the Account object
+
+trigger countofContcofAcc on Contact (after insert, after delete , after undelete) {
+    if(Trigger.isAfter && (Trigger.isInsert || Trigger.isUndelete)){
+        countofConofAccHandler.countActivities(Trigger.new);
+    }
+    if(Trigger.isAfter && Trigger.isDelete){
+        countofConofAccHandler.countActivities(Trigger.old);
+    }
+}
