@@ -1,0 +1,93 @@
+public class restrictionOppHandler {
+    public static void restionActivity(List<Opportunity> newRecords){
+        Set<Id> accIds=new Set<Id>();
+        for(Opportunity eo : newRecords){
+            if(eo.AccountId != null){
+                accIds.add(eo.AccountId);
+            }
+        }
+        Map<Id, Account> accVSopp= new Map<Id, Account>([Select Id, Name, Count_Of_Opps__c,(Select Id, Name, Amount from Opportunities ) from Account Where Id IN : accIds]);
+        for(Opportunity eo : newRecords){
+            if(accVSopp.ContainsKey(eo.AccountId)){
+                List<Opportunity> opp=accVSopp.get(eo.AccountId).Opportunities;
+                Decimal totalAmount=0;
+                if(Trigger.isInsert){
+                        if(accVSopp.get(eo.AccountId).Count_Of_Opps__c==null){
+                        totalAmount=0;
+                        accVSopp.get(eo.AccountId).Count_Of_Opps__c=0;
+                        if(opp!=null){
+                                System.debug('before loop total amount:' +totalAmount);
+                                System.debug('size '+opp.size());
+                                for(Opportunity inner_op: opp){  
+                                    if(inner_op.Amount!=null){
+                                    totalAmount=totalAmount + inner_op.Amount;
+                                    }else{
+                                        totalAmount=totalAmount + 0;
+                                    }
+                                }
+                            }                        
+                    }else{
+                        totalAmount=accVSopp.get(eo.AccountId).Count_Of_Opps__c;                        
+                    }
+                   totalAmount=totalAmount +eo.Amount;
+                }
+                if(Trigger.isUpdate){
+                    if(accVSopp.get(eo.AccountId).Count_Of_Opps__c!=null){
+                        if(opp!=null){
+                                for(Opportunity inner_op: opp){  
+                                    if(inner_op.Amount!=null && (eo.Id!=inner_op.Id)){
+                                    	totalAmount=totalAmount + inner_op.Amount;
+                                    }else if(eo.Id==inner_op.Id){
+                                        totalAmount=totalAmount + eo.Amount;                                        
+                                    }else{
+                                        totalAmount=totalAmount + 0;
+                                    }
+                                }
+                            }
+                    }                    
+                }                
+                if(totalAmount>=50000){
+                    eo.addError('pls change the oppo Amount it is exceded 50k');
+                }
+                accVSopp.get(eo.AccountId).Count_Of_Opps__c=totalAmount;                
+            }
+        }
+        if(!accVSopp.isEmpty()){
+            update accVSopp.values();
+        }
+    }
+     public static void restionActivityDelet(List<Opportunity> oldRecords){
+        Set<Id> accIds=new Set<Id>();
+        for(Opportunity eo : oldRecords){
+            if(eo.AccountId != null){
+                accIds.add(eo.AccountId);
+            }
+        }
+        Map<Id, Account> accVSopp= new Map<Id, Account>([Select Id, Name, Count_Of_Opps__c,(Select Id, Name, Amount from Opportunities ) from Account Where Id IN : accIds]);
+        for(Opportunity eo : oldRecords){
+            if(accVSopp.ContainsKey(eo.AccountId)){
+                List<Opportunity> opp=accVSopp.get(eo.AccountId).Opportunities;
+                Decimal totalAmount;
+                if(accVSopp.get(eo.AccountId).Count_Of_Opps__c==null){
+                    return;
+                }else{
+                     if(opp!=null){
+                         totalAmount=accVSopp.get(eo.AccountId).Count_Of_Opps__c-eo.Amount;
+                        }                    
+                }
+                if(totalAmount>=50000){
+                    eo.addError('pls change the oppo Amount it is exceded 50k');
+                }
+                accVSopp.get(eo.AccountId).Count_Of_Opps__c=totalAmount;
+                
+            }
+        }
+        if(!accVSopp.isEmpty()){
+            update accVSopp.values();
+        }
+    }
+    
+
+    
+
+}
