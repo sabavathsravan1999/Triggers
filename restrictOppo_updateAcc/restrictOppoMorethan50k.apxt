@@ -1,0 +1,14 @@
+<!-- 
+problem:
+there is Account and it has the related opportunities as soos as opportunity is create or update or deleted show the total amount in the Acccount custom field.
+-->
+trigger restrictOppoMorethan50k on Opportunity (before insert, before update, before delete) {
+    if(Trigger.isBefore && (Trigger.isInsert || Trigger.isUpdate)){
+        restrictionOppHandler.restionActivity(Trigger.new);
+    }
+       if(Trigger.isBefore && Trigger.isDelete){
+        restrictionOppHandler.restionActivityDelet(Trigger.old);
+    }
+
+
+}
