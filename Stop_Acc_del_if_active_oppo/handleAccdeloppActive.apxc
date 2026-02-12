@@ -1,0 +1,12 @@
+public class handleAccdeloppActive {
+/*write a trigge to prevent the Account Deletion if Active Opportunity*/
+public static void deleteActivity(Map<Id, Account> records){
+		Map<Id, Account> allAccOfActiveOpp=new Map<Id, Account>([SELECT Id FROM Account WHERE Id IN :records.Keyset() AND ID IN (SELECT AccountId from Opportunity WHERE IsClosed=false)]);
+		
+		for(Account ea : records.values()){
+			if(allAccOfActiveOpp.containsKey(ea.Id)){
+				ea.addError('Not allowed to delete');
+			}
+		}	
+	}
+}
