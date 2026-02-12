@@ -1,0 +1,1 @@
+/*write a trigge to prevent the Account Deletion if Active Opportunity*/
