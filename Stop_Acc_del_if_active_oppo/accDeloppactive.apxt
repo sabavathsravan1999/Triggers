@@ -1,0 +1,7 @@
+trigger accDeloppactive on Account (Before Delete) {
+/*write a trigge to prevent the Account Deletion if Active Opportunity*/
+    if(Trigger.isBefore && Trigger.isDelete){
+        handleAccdeloppActive.deleteActivity(Trigger.oldMap);
+    }
+    
+}
