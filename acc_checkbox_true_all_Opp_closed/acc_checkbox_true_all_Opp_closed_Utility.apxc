@@ -1,0 +1,28 @@
+/* Scenario: A user selects a checkbox called closedopportunity__c on an account record then all related opportunities for that account should be moved to 'Closed Won' 
+  and if the user unselects the checkbox then all related opportunities should be moved to open stage('Prospecting').*/
+
+public class acc_checkbox_true_all_Opp_closed_Utility {
+    public static void updateActivity(List<Account> newRecords, Map<Id,Account>oldRecords){
+        Map<Id,Boolean> accid_booleanValues=new Map<Id, Boolean>();
+		for(Account ea : newRecords){
+			if(ea.closedopportunity__c != oldRecords.get(ea.Id).closedopportunity__c){
+				accid_booleanValues.put(ea.Id, ea.closedopportunity__c);
+			}
+		}
+		
+		//[Select Id, AccoutId, Stage from Opportunity where AccoutId IN : accid_booleanValues.keySet()]
+		List<Opportunity> oppupdate=new List<Opportunity>();
+		for(Opportunity eo : [Select Id, AccountId, StageName from Opportunity where AccountId IN : accid_booleanValues.keySet()]){
+			if(accid_booleanValues.get(eo.AccountId)){
+				eo.StageName='Closed Won';
+			}else{
+				eo.StageName='Prospecting';
+			}
+			oppupdate.add(eo);
+		}
+		if(!oppupdate.isEmpty()){
+			update oppupdate;
+		}
+    }
+
+}
