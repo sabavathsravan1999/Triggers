@@ -1,0 +1,9 @@
+/* A user selects a checkbox called closedopportunity__c on an account record then all related opportunities for that account should be moved to 'Closed Won' 
+    and if the user unselects the checkbox then all related opportunities should be moved to open stage('Prospecting'). */
+
+trigger acc_checkbox_true_all_Opp_closed on Account (After update) {
+    if(Trigger.isAfter && Trigger.isUpdate){
+		acc_checkbox_true_all_Opp_closed_Utility.updateActivity(Trigger.new, Trigger.oldMap);
+	}
+
+}
